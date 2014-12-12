@@ -6,6 +6,13 @@ $(document).ready( function() {
 		var tags = $(this).find("input[name='tags']").val();
 		getUnanswered(tags);
 	});
+
+	$('.inspiration-getter').submit( function( event ){
+		$("div.results").html("");
+
+		var tag = $(this).find("input[name='answerers']").val();
+		getTopAnswerers(tag);
+	});
 });
 
 // this function takes the question object returned by StackOverflow 
@@ -87,6 +94,45 @@ var getUnanswered = function(tags) {
 		$('.search-results').append(errorElem);
 	});
 };
+
+
+var getTopAnswerers = function(tag) {
+	var params = {tag : tag, period : 'month' };
+
+	var result = $.ajax({
+		url: "http://api.stackexchange.com/2.2/tags/" + tag + "/top-answerers/month?site=stackoverflow",
+		dataType : "jsonp",
+		type: "GET"		
+	})
+	.done( function( result ){	
+		$.each(result.items, function(i, userHolder) {
+			$( "div.results" ).append( getAnswererHtml(userHolder) );
+		});	
+		
+	})
+	.fail(function(jqXHR, error, errorThrown){
+		var errorElem = showError(error);
+		$('.search-results').append(errorElem);
+	});
+}
+
+var getAnswererHtml = function(userHolder) {
+	var user = userHolder.user;
+	console.log(user);
+	var template = $('.templates .answerer').clone();
+
+	var questionElem = template.find('.display_name a');
+	questionElem.attr('href', user.link);
+	questionElem.text(user.display_name);
+
+	var reputationElem = template.find('.reputation');
+	reputationElem.text(user.reputation);
+
+	var profileImageElem = template.find('.profile_image img');
+	profileImageElem.attr('src', user.profile_image);
+
+	return template;
+}
 
 
 
