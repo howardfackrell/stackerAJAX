@@ -74,7 +74,7 @@ var getUnanswered = function(tags) {
 								sort: 'creation'};
 	
 	var result = $.ajax({
-		url: "http://api.stackexchange.com/2.2/questions/unanswered",
+		url: "//api.stackexchange.com/2.2/questions/unanswered",
 		data: request,
 		dataType: "jsonp",
 		type: "GET",
@@ -100,7 +100,7 @@ var getTopAnswerers = function(tag) {
 	var params = {tag : tag, period : 'month' };
 
 	var result = $.ajax({
-		url: "http://api.stackexchange.com/2.2/tags/" + tag + "/top-answerers/month?site=stackoverflow",
+		url: "//api.stackexchange.com/2.2/tags/" + tag + "/top-answerers/month?site=stackoverflow",
 		dataType : "jsonp",
 		type: "GET"		
 	})
@@ -118,7 +118,6 @@ var getTopAnswerers = function(tag) {
 
 var getAnswererHtml = function(userHolder) {
 	var user = userHolder.user;
-	console.log(user);
 	var template = $('.templates .answerer').clone();
 
 	var questionElem = template.find('.display_name a');
